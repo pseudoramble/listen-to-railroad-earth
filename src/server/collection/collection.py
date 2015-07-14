@@ -55,7 +55,10 @@ with futures.ThreadPoolExecutor(max_workers=50) as executor:
     }
 
     for future in futures.as_completed(future_to_url):
+        url = future_to_url[future]
+        
         try:
-            print(future.result())
+            future.result()
         except Exception as exc:
+            print("Error occured while downloading %s" % url)
             print(exc)
