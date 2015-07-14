@@ -1,6 +1,9 @@
 from bs4 import BeautifulSoup
 from urllib import request
 
+import functools
+from concurrent import futures
+
 #####################################################
 # A big ol' set of constants to try and not forget! #
 #####################################################
@@ -38,14 +41,21 @@ def fetch_show_songs(show_id):
     
     return request.urlretrieve(show_url, dest_filename)
 
-def fetch_the_data(show_ids):
-    for show_id in show_ids:
-        fetch_show_songs(show_id)
-        fetch_show_metadata(show_id)
-
+def fetch_show_info(song_id):
+    return (fetch_show_metadata(song_id), fetch_show_songs(song_id))
+        
 # Save these for later
 show_ids = get_show_ids()
 with open('show-identifiers.txt', 'w') as show_ids_fd:
     show_ids_fd.write('\n'.join(show_ids))
+    
+with futures.ThreadPoolExecutor(max_workers=50) as executor:
+    future_to_url = {
+        executor.submit(functools.partial(fetch_show_info, show_id)): show_id for show_id in show_ids
+    }
 
-fetch_the_data(show_ids)
+    for future in futures.as_completed(future_to_url):
+        try:
+            print(future.result())
+        except Exception as exc:
+            print(exc)
