@@ -3,3 +3,6 @@
 *.cmi$
 *.o$
 *.pyc$
+**/metadata
+**/songs
+**/show-data
