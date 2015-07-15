@@ -1,13 +1,18 @@
-from bs4 import BeautifulSoup
-from urllib import request
-
+import os
+import socket
 import functools
+from urllib import request
 from concurrent import futures
+
+from bs4 import BeautifulSoup
+
+socket.setdefaulttimeout(30)
 
 #####################################################
 # A big ol' set of constants to try and not forget! #
 #####################################################
 SHOW_IDS_URL = "http://archive.org/advancedsearch.php?q=collection%3Aetree+AND+format%3Amp3+AND+creator%3A%22Railroad+Earth%22&fl[]=identifier&sort[]=date+asc&sort[]=&sort[]=&rows=1500&page=1&callback=callback&output=xml"
+SHOW_IDS_FILE = "show-identifiers.txt"
 
 SHOW_SONG_URL = "http://archive.org/download/%s/%s_files.xml"
 SHOW_SONG_FILE = "songs/%s"
@@ -23,42 +28,61 @@ SHOW_METADATA_FILE = "metadata/%s"
 #####################################################
 
 def get_show_ids():
-    def identifier_strings(tag):
-        return tag.has_attr('name') and tag['name'] == 'identifier'
+    if not os.path.exists(SHOW_IDS_FILE):
+        def identifier_strings(tag):
+            return tag.has_attr('name') and tag['name'] == 'identifier'
     
-    soup = BeautifulSoup(request.urlopen(SHOW_IDS_URL).read(), "xml")
-    return [x.string for x in soup.find_all(identifier_strings)]
+        soup = BeautifulSoup(request.urlopen(SHOW_IDS_URL).read(), "xml")
+        show_ids = [x.string for x in soup.find_all(identifier_strings)]
+
+        with open(SHOW_IDS_FILE, 'w') as show_ids_fd:
+            show_ids_fd.write('\n'.join(show_ids))
+    else:
+        with open(SHOW_IDS_FILE, 'r') as show_ids_fd:
+            show_ids = [l.strip() for l in show_ids_fd.readlines()]
+        
+    return show_ids
 
 def fetch_show_metadata(show_id):
     show_url = SHOW_METADATA_URL % (show_id, show_id)
     dest_filename = SHOW_METADATA_FILE % show_id
-    
-    return request.urlretrieve(show_url, dest_filename)
+
+    if not os.path.exists(dest_filename):
+        return request.urlretrieve(show_url, dest_filename)
+    else:
+        return ()
 
 def fetch_show_songs(show_id):
     show_url = SHOW_SONG_URL % (show_id, show_id)
     dest_filename = SHOW_SONG_FILE % show_id
-    
-    return request.urlretrieve(show_url, dest_filename)
 
-def fetch_show_info(song_id):
-    return (fetch_show_metadata(song_id), fetch_show_songs(song_id))
-        
-# Save these for later
-show_ids = get_show_ids()
-with open('show-identifiers.txt', 'w') as show_ids_fd:
-    show_ids_fd.write('\n'.join(show_ids))
-    
-with futures.ThreadPoolExecutor(max_workers=50) as executor:
-    future_to_url = {
-        executor.submit(functools.partial(fetch_show_info, show_id)): show_id for show_id in show_ids
+    if not os.path.exists(dest_filename):
+        return request.urlretrieve(show_url, dest_filename)
+    else:
+        return ()
+
+show_ids = get_show_ids()    
+with futures.ThreadPoolExecutor(max_workers=8) as executor:
+    show_metadata = {
+        executor.submit(functools.partial(fetch_show_metadata, show_id)): show_id for show_id in show_ids
     }
 
-    for future in futures.as_completed(future_to_url):
-        url = future_to_url[future]
+    show_songs = {
+        executor.submit(functools.partial(fetch_show_songs, show_id)): show_id for show_id in show_ids
+    }
+
+    for future in futures.as_completed(show_metadata):
+        url = show_metadata[future]
         
         try:
             future.result()
         except Exception as exc:
-            print("Error occured while downloading %s" % url)
-            print(exc)
+            print("Error occured while downloading metadata for %s" % url)
+
+    for future in futures.as_completed(show_songs):
+        url = show_songs[future]
+        
+        try:
+            future.result()
+        except Exception as exc:
+            print("Error occured while downloading song lists for %s" % url)
