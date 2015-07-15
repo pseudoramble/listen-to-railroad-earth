@@ -35,6 +35,14 @@ def get_show_ids():
          
     return show_ids
 
+##
+# Obtain any show metadata located under the specified show_id
+# Note that if we detect that the metadata exists under show_id, we use the existing data
+# Otherwise, we'll request it from Archive.org
+#
+# @param {string} show_id - The ID to find the show metadata
+# @returns {tuple} - The data provided by request.urlretrieve. Otherwise, an empty tuple.
+##
 def fetch_show_metadata(show_id):
     show_url = SHOW_METADATA_URL % (show_id, show_id)
     dest_filename = SHOW_METADATA_FILE % show_id
@@ -44,6 +52,14 @@ def fetch_show_metadata(show_id):
     else:
         return ()
 
+##
+# Obtain the show set lists located under the specified show_id
+# Note that if we detect that the set lists exists under show_id, we use the existing data
+# Otherwise, we'll request it from Archive.org
+#
+# @param {string} show_id - The ID to find the show set list
+# @returns {tuple} - The data provided by request.urlretrieve. Otherwise, an empty tuple.
+##
 def fetch_show_songs(show_id):
     show_url = SHOW_SONG_URL % (show_id, show_id)
     dest_filename = SHOW_SONG_FILE % show_id
