@@ -76,13 +76,23 @@ with futures.ThreadPoolExecutor(max_workers=8) as executor:
         
         try:
             future.result()
-        except Exception as exc:
-            print("Error occured while downloading metadata for %s" % url)
+        except TimeoutError as timeout_ex:
+            print("A timeout occurred when downloading metadata for %s" % url)
+        except CancellerError as canceller_ex:
+            print("This future was cancelled when download metadata for %s" % url)
+        except Exception as future_ex:
+            print("An error occurred when downloading metadata for %s" % url)
+            print("Message was %s" % future_ex)
 
     for future in futures.as_completed(show_songs):
         url = show_songs[future]
-        
+    
         try:
             future.result()
-        except Exception as exc:
-            print("Error occured while downloading song lists for %s" % url)
+        except TimeoutError as timeout_ex:
+            print("A timeout occurred when downloading song list for %s" % url)
+        except CancellerError as canceller_ex:
+            print("This future was cancelled when download song list for %s" % url)
+        except Exception as future_ex:
+            print("An error occurred when downloading song list for %s" % url)
+            print("Message was %s" % future_ex)
