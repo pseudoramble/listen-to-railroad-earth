@@ -41,24 +41,34 @@ def build_show_data(show_id):
     with open(SHOW_METADATA_FILE % show_id) as show_metadata_fd:
         show_metadata = show_metadata_fd.read()
 
-    metadata_soup = BeautifulSoup(show_metadata)
+    try:
+        metadata_soup = BeautifulSoup(show_metadata)
     
-    return {
-        'date' : metadata_soup.find('date').string,
-        'venue' : metadata_soup.find('venue').string,
-        'location' : metadata_soup.find('coverage').string,
-        'id' : show_id,
-        'setlist' : build_set_list(show_id)
-        }
+        date = metadata_soup.find('date'),
+        venue = metadata_soup.find('venue'),
+        location = metadata_soup.find('coverage')
+        setlist = build_set_list(show_id),
+        
+        if date and venue and location and len(setlist) > 0:
+            return {
+                'date' : metadata_soup.find('date').string,
+                'venue' : metadata_soup.find('venue').string,
+                'location' : metadata_soup.find('coverage').string,
+                'id' : show_id,
+                'setlist' : setlist
+            }
+        else:
+            return {}
+    except:
+        return {}
 
 show_ids = list(Path(SHOW_METADATA_DIR).glob('*'))
 
-"""
 for show_id in show_ids:
     data = build_show_data(show_id.name)
 
-    with open(SHOW_DATA_FILE % show_id.name, 'w') as show_data_fd:
-       show_data_fd.write(str(data))
-"""
-
-print(build_show_data(show_ids[0].name))
+    if data:
+        with open(SHOW_DATA_FILE % show_id.name, 'w') as show_data_fd:
+            show_data_fd.write(str(data))
+    else:
+        print(show_id.name + " - failed to create dataset for this show")
