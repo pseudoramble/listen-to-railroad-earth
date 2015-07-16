@@ -1,0 +1,16 @@
+rre2013-08-04.matrix - Metadata - Missing 'coverage'
+RRE2010-07-01.RRE-HSMF-7-1-10 - Metadata - Missing 'coverage'
+rre2006-10-28.DPA4022.flac - Metadata - Missing 'coverage'
+rre2013-05-30.CM300 - Metadata - Missing 'coverage'
+rre2013-03-16.AT822 - Metadata - Missing 'coverage'
+RRE-2006-07-27.aud.flac - Songs - Weird 'track' attributes
+rre2007-01-24.neilt - Metadata - Missing 'coverage'
+rre2007-03-31.DPA4022.flac - Metadata - Missing 'coverage'
+rre2006-06-08 - Songs - Weird 'track' attributes
+rre2013-03-16.NAK-CM300
+rre2013-05-30.matrix
+rre2010-10-22.jman2
+rre2013-05-30.AT822
+rre2007-07-01.me120
+rre2012-09-18
+rre2010-08-28.jman2
