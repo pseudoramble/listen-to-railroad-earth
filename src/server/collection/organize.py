@@ -14,11 +14,7 @@ SHOW_METADATA_FILE = SHOW_METADATA_DIR + "%s"
 
 SHOW_DATA_FILE = "show-data/%s"
 
-def is_valid_song(elem):
-    pass
-
-
-def is_valid_track(tag):
+def is_valid_file(tag):
     if tag.name == 'file':
         file_format = tag.find('format')
         file_title = tag.find('title')
@@ -39,7 +35,7 @@ def build_set_list(show_id):
     
     songs_soup = BeautifulSoup(show_songs)
     
-    return sorted([generate_song(f) for f in songs_soup.find_all(is_valid_track)], key=by_track)
+    return sorted([generate_song(f) for f in songs_soup.find_all(is_valid_file)], key=by_track)
     
 def build_show_data(show_id):
     with open(SHOW_METADATA_FILE % show_id) as show_metadata_fd:
