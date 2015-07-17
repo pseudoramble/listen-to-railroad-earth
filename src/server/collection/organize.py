@@ -14,6 +14,17 @@ SHOW_METADATA_FILE = SHOW_METADATA_DIR + "%s"
 
 SHOW_DATA_FILE = "show-data/%s"
 
+##
+# Determine if the given tag is considered a valid 'file' tag.
+#
+# The parameter is considered valid in the following scenario:
+#  * The tag is 'file'
+#  * It has children tags of 'format', 'title', track
+#  * The 'format' tag's value is 'VBR MP3'
+#
+# @param {Tag} tag - A BeautifulSoup Tag to examine
+# @returns {boolean} - Whether or not the tag meets the expected criteria
+##
 def is_valid_file(tag):
     if tag.name == 'file':
         file_format = tag.find('format')
@@ -23,6 +34,14 @@ def is_valid_file(tag):
         return file_format.string == 'VBR MP3' and file_title and file_track
     return False
 
+##
+# Create a set list for the given show_id.
+# Each song on the setlist contains a title, track, and an id.
+# The setlist is sorted in track-order.
+#
+# @param {string} show_id - The ID for this specific show.
+# @returns {list<song>} - The songs associated to this show.
+##
 def build_set_list(show_id):
     def generate_song(f):
         return { 'title' : f.find('title').string, 'track' : f.find('track').string, 'id' : f.find('original').string }
@@ -36,7 +55,16 @@ def build_set_list(show_id):
     songs_soup = BeautifulSoup(show_songs)
     
     return sorted([generate_song(f) for f in songs_soup.find_all(is_valid_file)], key=by_track)
-    
+
+##
+# Create a show's data, when possible.
+# The dataset must include an ID, date, venue, valid setlist, and a location.
+# If one of these attributes does not exist, or an issue occurs while trying to
+#  find this info out, an empty show is returned.
+#
+# @param {string} show_id - The ID for this specific show.
+# @returns {show} - The show built up from the data.
+##
 def build_show_data(show_id):
     with open(SHOW_METADATA_FILE % show_id) as show_metadata_fd:
         show_metadata = show_metadata_fd.read()
@@ -62,6 +90,12 @@ def build_show_data(show_id):
     except:
         return {}
 
+#################################################################
+# Ah, yes. The 'main' function.                                 #
+# Rips through any metadata files it can find.                  #
+# Creates a show object for each & writes it to a file.         #
+# If an empty show is given, print a warning out to be examined.#
+#################################################################
 show_ids = list(Path(SHOW_METADATA_DIR).glob('*'))
 
 for show_id in show_ids:
