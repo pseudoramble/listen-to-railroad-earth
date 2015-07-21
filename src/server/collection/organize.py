@@ -14,6 +14,8 @@ SHOW_METADATA_FILE = SHOW_METADATA_DIR + "%s"
 
 SHOW_DATA_FILE = "show-data/%s"
 
+SHOW_SONG_URL = "http://archive.org/download/%s/%s"
+
 ##
 # Determine if the given tag is considered a valid 'file' tag.
 #
@@ -44,7 +46,13 @@ def is_valid_file(tag):
 ##
 def build_set_list(show_id):
     def generate_song(f):
-        return { 'title' : f.find('title').string, 'track' : f.find('track').string, 'id' : f.find('original').string }
+        song_id = f['name']
+        song_url = SHOW_SONG_URL % (show_id, song_id)
+        
+        return { 'title' : f.find('title').string,
+                 'track' : f.find('track').string,
+                 'id' : song_id,
+                 'url' : song_url }
 
     def by_track(song):
         return int(song['track'])
