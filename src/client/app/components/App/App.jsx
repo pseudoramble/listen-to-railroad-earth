@@ -23,7 +23,6 @@ export default class App extends Component {
     }
     
     componentDidMount() {
-        console.warn(this.recalculateState);
         ShowStore.addChangeListener(this.recalculateState);
     }
 
@@ -37,7 +36,7 @@ export default class App extends Component {
         this.setState({
             year : year,
             shows : ShowStore.getShows(year),
-            setlist : ShowStore.getSetlist(params.show),
+            setlist : ShowStore.getSetlist(show),
             track : params.track
         });
     }
