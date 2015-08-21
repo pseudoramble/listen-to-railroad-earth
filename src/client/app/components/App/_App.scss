@@ -1,0 +1,20 @@
+@import "toolkit";
+
+.app {
+    font-size: inherit;
+    @include my-padding-mixin(20px);
+}
+
+.listings {
+    display: -webkit-flex;
+    display:         flex;
+    -webkit-flex-flow: row;
+    flex-flow: row;
+}
+
+@media all and (max-width: 768px) {
+  .listings {
+      -webkit-flex-flow: column;
+      flex-flow: column;
+  }
+}

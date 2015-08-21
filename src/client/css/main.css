@@ -34,6 +34,7 @@ article {
 
 article > div.box {
     padding: 10px;
+    margin: 10px;
     background: #dcddd8;
     border: 2px solid green;
     max-height: 80%;

@@ -1,0 +1,22 @@
+@import "toolkit";
+
+.listing {
+    padding: 10px;
+    margin: 10px;
+    background: #dcddd8;
+    border: 2px solid green;
+    max-height: 80%;
+    overflow: overlay;
+
+    -webkit-flex: 3 1 80%;
+    flex: 3 1 80%;
+    -webkit-order: 1;
+    order: 2;
+}
+
+@media all and (max-width: 768px) {
+    .listing {
+        -webkit-order: 0;
+        order: 0;
+    }
+}
