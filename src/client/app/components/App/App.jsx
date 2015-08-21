@@ -23,17 +23,22 @@ export default class App extends Component {
     }
     
     componentDidMount() {
-        ShowStore.addChangeListener(this.onChange);
+        console.warn(this.recalculateState);
+        ShowStore.addChangeListener(this.recalculateState);
     }
 
     componentWillUnmount() {
-        ShowStore.removeChangeListener(this.onChange);
+        ShowStore.removeChangeListener(this.recalculateState);
     }
 
-    onChange = (year) => {
+    recalculateState = (params) => {
+        const year = params.year || this.state.year;
+        
         this.setState({
             year : year,
-            shows : ShowStore.getShows(year)
+            shows : ShowStore.getShows(year),
+            setlist : ShowStore.getSetlist(params.show),
+            track : params.track
         });
     }
 
@@ -42,7 +47,11 @@ export default class App extends Component {
     }
             
     onShowSelected(show) {
-        console.warn(show);
+        AppActions.showSelected(show.key);
+    }
+
+    onTrackSelected(track) {
+        this.recalculateState({ track : track.key });
     }
     
     yearRange(startYear, endYear) {
@@ -59,26 +68,40 @@ export default class App extends Component {
 
     showEntries(shows) {
         return shows.map((show) => {
-            return <div key={show.id}>
-                <span>{show.date} - </span>
-                <span>{show.venue} - </span>
-                <span>{show.location}</span>
-            </div>
+            return (
+                <div key={show.id}>
+                    <span>{show.date} - </span>
+                    <span>{show.venue} - </span>
+                    <span>{show.location}</span>
+                </div>
+            );
         });
     }
-    
+
+    setlistEntries(setlist) {
+        return setlist.map((track, i) => {
+            return (
+                <div key={track.url} number={i}>
+                    <span>{track.title}</span>
+                </div>
+            );
+        });
+    }
+   
     render() {
         const years = this.yearRange("2001", "2015");
         const shows = this.showEntries(this.state.shows);
+        const setlist = this.setlistEntries(this.state.setlist);
+        const track = this.state.track;
         
         return (
             <div className={styles.app}>
                 <div className={styles.listings}>
                     <Listing entries={years} onEntryClicked={this.onYearSelected}></Listing>
                     <Listing entries={shows} onEntryClicked={this.onShowSelected}></Listing>
-                    <Listing></Listing>
+                    <Listing entries={setlist} onEntryClicked={this.onTrackSelected.bind(this)}></Listing>
                 </div>
-                <Player></Player>
+                <Player tracklist={setlist} track={track}></Player>
             </div>
         );
     }
