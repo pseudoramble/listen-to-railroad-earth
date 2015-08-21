@@ -37,6 +37,14 @@ export default class App extends Component {
         });
     }
 
+    onYearSelected(year) {
+        AppActions.yearSelected(year);
+    }
+            
+    onShowSelected(show) {
+        console.warn(show);
+    }
+    
     yearRange(startYear, endYear) {
         let current = parseInt(startYear);
         const range = [], end = parseInt(endYear);
@@ -59,14 +67,6 @@ export default class App extends Component {
         });
     }
     
-    onYearChange(year) {
-        AppActions.yearSelected(year);
-    }
-
-    onShowSelected(show) {
-        console.warn(show);
-    }
-    
     render() {
         const years = this.yearRange("2001", "2015");
         const shows = this.showEntries(this.state.shows);
@@ -74,7 +74,7 @@ export default class App extends Component {
         return (
             <div className={styles.app}>
                 <div className={styles.listings}>
-                    <Listing entries={years} onEntryClicked={this.onYearChange}></Listing>
+                    <Listing entries={years} onEntryClicked={this.onYearSelected}></Listing>
                     <Listing entries={shows} onEntryClicked={this.onShowSelected}></Listing>
                     <Listing></Listing>
                 </div>
