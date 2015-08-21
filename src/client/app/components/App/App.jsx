@@ -9,37 +9,51 @@ import Listing from '../Listing/Listing';
 import Player from '../Player/Player';
 
 function getAppState() {
-  return {
-    items: ItemsStore.getAll()
-  };
+    return {
+        items: ItemsStore.getAll()
+    };
 }
 
 export default class App extends React.Component {
-  state = getAppState()
+    state = getAppState()
+        
+    componentDidMount() {
+        ItemsStore.addChangeListener(this.onChange);
+        AppActions.getItems();
+    }
 
-  componentDidMount() {
-    ItemsStore.addChangeListener(this.onChange);
-    AppActions.getItems();
-  }
+    componentWillUnmount() {
+        ItemsStore.removeChangeListener(this.onChange);
+    }
 
-  componentWillUnmount() {
-    ItemsStore.removeChangeListener(this.onChange);
-  }
+    onChange = () => {
+        this.setState(getAppState());
+    }
 
-  onChange = () => {
-    this.setState(getAppState());
-  }
+    yearRange(startYear, endYear) {
+        let current = parseInt(startYear), end = parseInt(endYear);
+        const range = [];
+        
+        while (current <= end) {
+            range.push(current);
+            current++;
+        }
 
-  render() {
-    return (
-        <div className={styles.app}>
-            <div className={styles.listings}>
-                <Listing></Listing>
-                <Listing></Listing>
-                <Listing></Listing>
+        return range;
+    }
+    
+    render() {
+        const years = this.yearRange("2001", "2015");
+        
+        return (
+            <div className={styles.app}>
+                <div className={styles.listings}>
+                    <Listing entries={years}></Listing>
+                    <Listing></Listing>
+                    <Listing></Listing>
+                </div>
+                <Player></Player>
             </div>
-            <Player></Player>
-        </div>
-    );
-  }
+        );
+    }
 }
