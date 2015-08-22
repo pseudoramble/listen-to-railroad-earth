@@ -12,10 +12,6 @@ const YEAR_TO_SHOWS = {};
                         const parsedData = JSON.parse(data);
                         const showYear = new Date(parsedData.date).getFullYear();
                         
-                        console.warn("Data = ", parsedData);
-                        console.warn("Saved date = ", parsedData.date);
-                        console.warn("Parsed date = ", Date.parse(parsedData.date));
-                        
                         if (showData[showYear]) {
                             showData[showYear].push(parsedData);
                         } else {
@@ -42,13 +38,9 @@ const SHOW_TO_SETLIST = {};
                     if (!fileErr) {
                         const parsedData = JSON.parse(data);
                         const showId = parsedData.id;
-                        const setlist = data.setlist.length === 1 && data.setlist[0].length ? data.setlist[0] : data.setlist;
+                        const setlist = parsedData.setlist.length === 1 && parsedData.setlist[0].length > 0 ? parsedData.setlist[0] : parsedData.setlist;
                         
-                        if (showData[showId]) {
-                            showData[showId].push(setlist);
-                        } else {
-                            showData[showId] = [setlist];
-                        }
+                        showData[showId] = setlist;
                     } else {
                         console.error("ERROR - Unable to read the file " + file + " from this directory during show-to-setlist");
                         console.error(fileErr);
@@ -63,14 +55,6 @@ const SHOW_TO_SETLIST = {};
 
 module.exports = {
     getShows : function(year) {
-        if (!YEAR_TO_SHOWS[year]) {
-            console.error("Unable to find an entry for the year " + year);
-            console.error("Available years:");
-            for (var key in YEAR_TO_SHOWS) {
-                console.error("\t", key);
-            }
-        }
-        
         return YEAR_TO_SHOWS[year] || [];
     },
 

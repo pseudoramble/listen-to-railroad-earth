@@ -1,6 +1,7 @@
 import os
-from pathlib import Path
+import json
 
+from pathlib import Path
 from bs4 import BeautifulSoup
 
 #####################################################
@@ -61,7 +62,6 @@ def build_set_list(show_id):
         show_songs = show_songs_fd.read()
     
     songs_soup = BeautifulSoup(show_songs)
-    
     return sorted([generate_song(f) for f in songs_soup.find_all(is_valid_file)], key=by_track)
 
 ##
@@ -111,6 +111,6 @@ for show_id in show_ids:
 
     if data:
         with open(SHOW_DATA_FILE % show_id.name, 'w') as show_data_fd:
-            show_data_fd.write(str(data))
+            json.dump(data, show_data_fd)
     else:
         print(show_id.name + " - failed to create dataset for this show")
