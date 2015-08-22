@@ -23,7 +23,16 @@ export default {
     getSetlist(show) {
         return new Promise((resolve) => {
             setTimeout(() => {
-                resolve([{ id : "abcde12345", title : "Hobo Song", url : "https://archive.org/download/rre2007-06-22.adkA51TL.flac/rre2007-06-22d02t07.mp3" }]);
+                resolve([
+                    {
+                        id : "abcde12345",
+                        title : "Hobo Song",
+                        url : "https://archive.org/download/rre2007-06-22.adkA51TL.flac/rre2007-06-22d02t07.mp3"
+                    }, {
+                        id : "lolwut987",
+                        title : "Drag Him Down",
+                        url : "https://archive.org/download/rre2007-06-22.adkA51TL.flac/rre2007-06-22d01t01.mp3"
+                    }]);
             }, 500);
         });
     }

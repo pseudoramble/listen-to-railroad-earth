@@ -8,11 +8,12 @@ export default class Player extends React.Component {
     }
     
     render() {
-        const currentTrack = <source src={this.props.track} />
+        const currentTrack = this.props.track,
+              trackList = this.props.tracklist.map((track) => <source key={track.url} src={track.url} />)
 
         return (
             <audio src={this.props.track} className={styles.player} controls="controls" autoPlay="autoplay">
-                {currentTrack}
+                {trackList}
             </audio>
         );
     }

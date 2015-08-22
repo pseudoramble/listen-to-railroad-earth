@@ -32,11 +32,12 @@ export default class App extends Component {
 
     recalculateState = (params) => {
         const year = params.year || this.state.year;
+        const show = params.show || this.state.show;
         
         this.setState({
             year : year,
             shows : ShowStore.getShows(year),
-            setlist : ShowStore.getSetlist(show),
+            setlist : params.setlist || ShowStore.getSetlist(show),
             track : params.track
         });
     }
@@ -50,7 +51,7 @@ export default class App extends Component {
     }
 
     onTrackSelected(track) {
-        this.recalculateState({ track : track.key });
+        this.recalculateState({ track : track.key, setlist : this.state.setlist });
     }
     
     yearRange(startYear, endYear) {
@@ -65,6 +66,10 @@ export default class App extends Component {
         return range;
     }
 
+    yearEntries(years) {
+        return years.map((year) => <div key={year}>{year}</div>);
+    }
+    
     showEntries(shows) {
         return shows.map((show) => {
             return (
@@ -88,11 +93,11 @@ export default class App extends Component {
     }
    
     render() {
-        const years = this.yearRange("2001", "2015");
-        const shows = this.showEntries(this.state.shows);
-        const setlist = this.setlistEntries(this.state.setlist);
-        const track = this.state.track;
-        
+        const years = this.yearEntries(this.yearRange("2001", "2015")),
+              shows = this.showEntries(this.state.shows),
+              setlist = this.setlistEntries(this.state.setlist),
+              track = this.state.track;
+
         return (
             <div className={styles.app}>
                 <div className={styles.listings}>
@@ -100,7 +105,7 @@ export default class App extends Component {
                     <Listing entries={shows} onEntryClicked={this.onShowSelected}></Listing>
                     <Listing entries={setlist} onEntryClicked={this.onTrackSelected.bind(this)}></Listing>
                 </div>
-                <Player tracklist={setlist} track={track}></Player>
+                <Player tracklist={this.state.setlist} track={track}></Player>
             </div>
         );
     }

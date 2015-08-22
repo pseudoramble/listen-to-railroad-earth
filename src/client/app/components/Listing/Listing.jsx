@@ -10,7 +10,7 @@ export default class Listing extends React.Component {
             <div className={styles.listing}>
                 {
                     entries.map((entry) => {
-                        return (<div key={entry}><a onClick={this.props.onEntryClicked.bind(this, entry)}>{entry}</a></div>)
+                        return (<a key={entry.key} onClick={this.props.onEntryClicked.bind(this, entry)}>{entry}</a>)
                     })
                 }
             </div>
