@@ -11,7 +11,7 @@
     "devPort": 8000
   },
   "scripts": {
-    "build": "NODE_ENV=production npm run webpack",
+    "build": "webpack --colors --progress --config ./webpack/config && cp -R ./build/* ./public/",
     "clean": "rimraf $npm_package_config_buildDir && mkdir $npm_package_config_buildDir",
     "env": "env",
     "lint": "eslint --ext .js --ext .jsx ./app ./webpack && echo No linting errors.",
@@ -21,8 +21,7 @@
     "pretest-travis": "npm install && npm run lint",
     "start": "NODE_ENV=development node dev-server ./webpack/config",
     "test": "NODE_ENV=test karma start",
-    "test-travis": "NODE_ENV=test karma start --single-run",
-    "webpack": "webpack --colors --progress --config ./webpack/config"
+    "test-travis": "NODE_ENV=test karma start --single-run"
   },
   "dependencies": {
     "classnames": "^2.1.3",

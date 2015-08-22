@@ -43,7 +43,7 @@ export default class App extends Component {
     }
 
     onYearSelected(year) {
-        AppActions.yearSelected(year);
+        AppActions.yearSelected(year.key);
     }
             
     onShowSelected(show) {
