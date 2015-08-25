@@ -7,16 +7,22 @@
     border: 2px solid green;
     max-height: 80%;
     overflow: overlay;
-
+    
     -webkit-flex: 3 1 80%;
     flex: 3 1 80%;
     -webkit-order: 1;
-    order: 2;
+    order: 1;
+}
+
+.listing > button {
+    display: block;
+    width: 90%;
+    margin: 0 auto;
 }
 
 @media all and (max-width: 768px) {
     .listing {
-        -webkit-order: 0;
-        order: 0;
+        -webkit-order: 1;
+        order: 1;
     }
 }

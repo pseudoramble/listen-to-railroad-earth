@@ -20,6 +20,6 @@ export default {
     },
 
     getSetlist(show) {
-        return callService("setlist/" + show);
+        return callService("/setlist/" + show);
     }
 };

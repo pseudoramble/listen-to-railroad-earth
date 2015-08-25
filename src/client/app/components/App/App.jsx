@@ -51,7 +51,13 @@ export default class App extends Component {
     }
 
     onTrackSelected(track) {
-        this.recalculateState({ track : track.key, setlist : this.state.setlist });
+        this.recalculateState({
+            track : {
+                index : track.props.index,
+                url : track.key
+            },
+            setlist : this.state.setlist
+        });
     }
     
     yearRange(startYear, endYear) {
@@ -85,7 +91,7 @@ export default class App extends Component {
     setlistEntries(setlist) {
         return setlist.map((track, i) => {
             return (
-                <div key={track.url} number={i}>
+                <div key={track.url} index={i}>
                     <span>{track.title}</span>
                 </div>
             );
