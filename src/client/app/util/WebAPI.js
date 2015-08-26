@@ -10,7 +10,7 @@ const callService = function(path, method, data) {
             request.send();
         
         request.addEventListener("load", (evt) => resolve(JSON.parse(request.responseText)));
-        request.addEventListener("error", (evt) => reject("Something bad happened"));
+        request.addEventListener("error", (evt) => reject(evt));
     });
 };
 
