@@ -16,10 +16,12 @@ const callService = function(path, method, data) {
 
 export default {
     getShows(year) {
-        return callService("/shows/" + year);
+        const service = DEBUG ? "http://localhost:3000/shows/" : "/shows/";
+        return callService(service + year);
     },
 
     getSetlist(show) {
-        return callService("/setlist/" + show);
+        const service = DEBUG ? "http://localhost:3000/setlist/" : "/setlist/";
+        return callService(service + show);
     }
 };
