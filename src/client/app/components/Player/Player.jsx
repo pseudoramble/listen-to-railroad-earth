@@ -8,7 +8,7 @@ export default class Player extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        const nextTrackIndex = nextProps && nextProps.track ? nextProps.track.index : undefined;
+        const nextTrackIndex = nextProps && nextProps.startTrack ? nextProps.startTrack : undefined;
         
         this.setState({
             index : nextTrackIndex
@@ -16,12 +16,12 @@ export default class Player extends React.Component {
     }
     
     shouldComponentUpdate(nextProps) {
-        return !!nextProps.track && this.props.track !== nextProps.track;
+        return !!nextProps.startTrack && this.props.track !== nextProps.startTrack;
     }
 
-    nextTrack() {
+    setNextTrack() {
         const audioNode = React.findDOMNode(this.refs.audioTag);
-        const nextTrack = (this.state.index || this.props.track.index) + 1
+        const nextTrack = (this.state.index || this.props.startTrack) + 1
 
         if (nextTrack < this.props.tracklist.length) {
             audioNode.src = this.props.tracklist[nextTrack].url;
@@ -31,18 +31,19 @@ export default class Player extends React.Component {
             });
         }
     }
-
+    
     componentDidMount() {
         const audioNode = React.findDOMNode(this.refs.audioTag);
-        audioNode.addEventListener("ended", this.nextTrack.bind(this));
+        audioNode.addEventListener("ended", this.setNextTrack.bind(this));
     }
     
     render() {
-        const currentTrack = this.props.track ? this.props.track.url : "",
-              audioTag =  (
-                  <audio ref="audioTag" onEnded={this.nextTrack} src={currentTrack} className={styles.player} controls="controls" autoPlay="autoplay"></audio>
-              );
+        const startTrack = this.props.tracklist ? this.props.tracklist[this.props.startTrack || 0] : "";
 
-        return audioTag;
+        return (
+            <div>
+                <audio ref="audioTag" src={startTrack && startTrack.url ? startTrack.url : ""} className={styles.player} controls="controls" autoPlay="autoplay"></audio>
+            </div>
+        );
     }
 }

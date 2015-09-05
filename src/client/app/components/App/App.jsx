@@ -53,8 +53,7 @@ export default class App extends Component {
     onTrackSelected(track) {
         this.recalculateState({
             track : {
-                index : track.props.index,
-                url : track.key
+                index : track.props.index
             },
             setlist : this.state.setlist
         });
@@ -102,7 +101,7 @@ export default class App extends Component {
         const years = this.yearEntries(this.yearRange("2001", "2015")),
               shows = this.showEntries(this.state.shows),
               setlist = this.setlistEntries(this.state.setlist),
-              track = this.state.track;
+              startTrack = this.state.track ? this.state.track.index : null;
 
         return (
             <div className={styles.app}>
@@ -111,7 +110,7 @@ export default class App extends Component {
                     <Listing entries={shows} onEntryClicked={this.onShowSelected}></Listing>
                     <Listing entries={setlist} onEntryClicked={this.onTrackSelected.bind(this)}></Listing>
                 </div>
-                <Player tracklist={this.state.setlist} track={track}></Player>
+                <Player tracklist={this.state.setlist} startTrack={startTrack}></Player>
             </div>
         );
     }
