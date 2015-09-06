@@ -56,10 +56,16 @@ class ShowStore extends EventEmitter {
     }
 
     findTrackIndex(id, trackId) {
-        return this.setlists[id].reduce((prev, cur, i) => {
-            if (cur.id === trackId) return i;
-            else return prev;
-        }, 0);
+        if (this.setlists[id]) {
+            return this.setlists[id].reduce((prev, cur, i) => {
+                if (cur.id === trackId) return i;
+                else return prev;
+            }, 0);
+        } else {
+            console.error("ERROR - Could not find setlist with ID = ", id);
+            console.error("\tThe trackId was = ", trackId);
+            return -1;
+        }
     }
 
     addPlaylistConfiguredListener(callback) {
