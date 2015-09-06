@@ -78,9 +78,9 @@ export default class App extends Component {
     }
 
     setlistEntries(setlist) {
-        return setlist.map((track, i) => {
+        return setlist.map((track) => {
             return (
-                <div key={track.id} index={i}>
+                <div key={track.id}>
                     <span>{track.title}</span>
                 </div>
             );
