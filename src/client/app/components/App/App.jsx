@@ -24,10 +24,12 @@ export default class App extends Component {
     
     componentDidMount() {
         ShowStore.addChangeListener(this.recalculateState);
+        ShowStore.addPlaylistConfiguredListener(this.onPlaylistConfigured);
     }
 
     componentWillUnmount() {
         ShowStore.removeChangeListener(this.recalculateState);
+        ShowStore.removePlaylistConfiguredListener(this.onPlaylistConfigured);
     }
 
     recalculateState = (params) => {
@@ -38,24 +40,12 @@ export default class App extends Component {
             year : year,
             shows : ShowStore.getShows(year),
             setlist : params.setlist || ShowStore.getSetlist(show),
-            track : params.track
         });
     }
 
-    onYearSelected(year) {
-        AppActions.yearSelected(year.key);
-    }
-            
-    onShowSelected(show) {
-        AppActions.showSelected(show.key);
-    }
-
-    onTrackSelected(track) {
-        this.recalculateState({
-            track : {
-                index : track.props.index
-            },
-            setlist : this.state.setlist
+    onPlaylistConfigured = (params) => {
+        this.setState({
+            track : params.startTrack
         });
     }
     
@@ -90,7 +80,7 @@ export default class App extends Component {
     setlistEntries(setlist) {
         return setlist.map((track, i) => {
             return (
-                <div key={track.url} index={i}>
+                <div key={track.id} index={i}>
                     <span>{track.title}</span>
                 </div>
             );
@@ -101,16 +91,16 @@ export default class App extends Component {
         const years = this.yearEntries(this.yearRange("2001", "2015")),
               shows = this.showEntries(this.state.shows),
               setlist = this.setlistEntries(this.state.setlist),
-              startTrack = this.state.track ? this.state.track.index : null;
+              startTrack = this.state.track;
 
         return (
             <div className={styles.app}>
                 <div className={styles.listings}>
-                    <Listing entries={years} onEntryClicked={this.onYearSelected}></Listing>
-                    <Listing entries={shows} onEntryClicked={this.onShowSelected}></Listing>
-                    <Listing entries={setlist} onEntryClicked={this.onTrackSelected.bind(this)}></Listing>
+                    <Listing id="years-listing" title="Years" entries={years}></Listing>
+                    <Listing id="shows-listing" entries={shows}></Listing>
+                    <Listing id="setlist-listing" entries={setlist}></Listing>
                 </div>
-                <Player tracklist={this.state.setlist} startTrack={startTrack}></Player>
+                <Player startTrack={startTrack}></Player>
             </div>
         );
     }

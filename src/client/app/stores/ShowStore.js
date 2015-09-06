@@ -5,7 +5,10 @@ import {
     GET_SHOW,
     SHOW_ADDED,
     GET_SETLIST,
-    SETLIST_ADDED
+    SETLIST_ADDED,
+    TRACK_CHANGE,
+    TRACK_FINISHED,
+    PLAYLIST_CONFIGURED
 } from '../constants/AppConstants';
 
 class ShowStore extends EventEmitter {
@@ -42,6 +45,30 @@ class ShowStore extends EventEmitter {
         else
             return [];
     }
+
+    configureSetlist(id, trackIndex) {
+        const startTrackIndex = trackIndex || 0,
+              setlist = this.setlists[id];
+        
+        if (setlist && setlist.length > 0 && startTrackIndex < setlist.length) {
+            this.emit(PLAYLIST_CONFIGURED, { startTrack : setlist[startTrackIndex] });
+        }
+    }
+
+    findTrackIndex(id, trackId) {
+        return this.setlists[id].reduce((prev, cur, i) => {
+            if (cur.id === trackId) return i;
+            else return prev;
+        }, 0);
+    }
+
+    addPlaylistConfiguredListener(callback) {
+        this.on(PLAYLIST_CONFIGURED, callback);
+    }
+
+    removePlaylistConfiguredListener(callback) {
+        this.removeListener(PLAYLIST_CONFIGURED, callback);
+    }
     
     addChangeListener(callback) {
         this.on(SHOW_ADDED, callback);
@@ -54,7 +81,8 @@ class ShowStore extends EventEmitter {
     }
 };
 
-let store = new ShowStore();
+let store = new ShowStore(),
+    activeSetlist;
 
 AppDispatcher.register((action) => {
     switch (action.actionType) {
@@ -63,6 +91,13 @@ AppDispatcher.register((action) => {
             break;
         case GET_SETLIST:
             store.addSetlist(action.show, action.setlist);
+            activeSetlist = action.show;
+            break;
+        case TRACK_CHANGE:
+            store.configureSetlist(activeSetlist, store.findTrackIndex(activeSetlist, action.track));
+            break;
+        case TRACK_FINISHED:
+            store.configureSetlist(activeSetlist, store.findTrackIndex(activeSetlist, action.track) + 1);
             break;
     }
 });

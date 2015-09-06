@@ -7,3 +7,8 @@ export const SHOW_ADDED = "SHOW_ADDED";
 
 export const GET_SETLIST = "GET_SETLIST";
 export const SETLIST_ADDED = "SETLIST_ADDED";
+
+export const TRACK_CHANGE = "TRACK_CHANGE";
+export const TRACK_FINISHED = "TRACK_FINISHED";
+
+export const PLAYLIST_CONFIGURED = "PLAYLIST_CONFIGURED";

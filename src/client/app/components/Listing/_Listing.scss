@@ -1,7 +1,6 @@
 @import "toolkit";
 
 .listing {
-    padding: 10px;
     margin: 10px;
     background: #dcddd8;
     border: 2px solid green;
@@ -18,6 +17,10 @@
     display: block;
     width: 90%;
     margin: 0 auto;
+}
+
+.title {
+    
 }
 
 @media all and (max-width: 768px) {
