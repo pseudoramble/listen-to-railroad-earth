@@ -38,8 +38,9 @@ export default class App extends Component {
         
         this.setState({
             year : year,
+            selectedShow : show,
             shows : ShowStore.getShows(year),
-            setlist : params.setlist || ShowStore.getSetlist(show),
+            setlist : params.setlist || ShowStore.getSetlist(show)
         });
     }
 
@@ -86,13 +87,27 @@ export default class App extends Component {
             );
         });
     }
-   
+
+    playerInfo(year, showId, trackSelected) {
+        const showInfo = ShowStore.getShowInfo(year, showId);
+
+        console.info(showInfo);
+        
+        if (showInfo.venue && showInfo.location && trackSelected)
+            return (<a href={"https://archive.org/details/" + showInfo.id} target="_blank">
+                      {showInfo.venue + " in " + showInfo.location}
+                    </a>);
+        else
+            return "";
+    }
+    
     render() {
         const years = this.yearEntries(this.yearRange("2001", "2015")),
               shows = this.showEntries(this.state.shows),
               setlist = this.setlistEntries(this.state.setlist),
-              startTrack = this.state.track;
-
+              startTrack = this.state.track,
+              displayInfo = this.playerInfo(this.state.year, this.state.selectedShow, !!startTrack);
+        
         return (
             <div className={styles.app}>
                 <div className={styles.listings}>
@@ -100,7 +115,7 @@ export default class App extends Component {
                     <Listing id="shows-listing" entries={shows}></Listing>
                     <Listing id="setlist-listing" entries={setlist}></Listing>
                 </div>
-                <Player startTrack={startTrack}></Player>
+                <Player startTrack={startTrack} displayInfo={displayInfo}></Player>
             </div>
         );
     }

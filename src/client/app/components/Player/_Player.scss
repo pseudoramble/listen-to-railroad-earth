@@ -1,5 +1,14 @@
 .player {
     width: 100%;
-    display: block;
 }
 
+.player > audio {
+    margin: 0 auto;
+    display: inline;
+    width: 80%;
+}
+
+.button {
+    width: 10%;
+    padding: 0 10px 10px 10px;
+}

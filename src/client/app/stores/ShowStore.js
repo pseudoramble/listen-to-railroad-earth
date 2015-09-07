@@ -32,6 +32,17 @@ class ShowStore extends EventEmitter {
             return [];
     }
 
+    getShowInfo(year, showId) {
+        if (this.shows[year]) {
+            return this.shows[year].reduce(function(cur, prev) {
+                if (cur.id === showId) return cur;
+                else return prev;
+            }, {});
+        }
+
+        return {};
+    }
+
     addSetlist(show, setlist) {
         if (!this.setlists[show])
             this.setlists[show] = setlist;
