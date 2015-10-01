@@ -15,6 +15,10 @@
     max-height: 900px;
 }
 
+.hidden {
+    display: none;
+}
+
 @media all and (max-width: 768px) {
   .listings {
       -webkit-flex-flow: column;

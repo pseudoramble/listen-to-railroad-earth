@@ -14,7 +14,8 @@ export default class App extends Component {
         return {
             year : "",
             shows : [],
-            setlist : []
+            setlist : [],
+            displayedListing : "year"
         }
     }
 
@@ -47,6 +48,12 @@ export default class App extends Component {
     onPlaylistConfigured = (params) => {
         this.setState({
             track : params.startTrack
+        });
+    }
+
+    onTitleClicked(listingName) {
+        this.setState({
+            displayedListing : listingName
         });
     }
     
@@ -91,8 +98,6 @@ export default class App extends Component {
     playerInfo(year, showId, trackSelected) {
         const showInfo = ShowStore.getShowInfo(year, showId);
 
-        console.info(showInfo);
-        
         if (showInfo.venue && showInfo.location && trackSelected)
             return (<a href={"https://archive.org/details/" + showInfo.id} target="_blank">
                       {showInfo.venue + " in " + showInfo.location}
@@ -107,13 +112,25 @@ export default class App extends Component {
               setlist = this.setlistEntries(this.state.setlist),
               startTrack = this.state.track,
               displayInfo = this.playerInfo(this.state.year, this.state.selectedShow, !!startTrack);
-        
+
         return (
             <div className={styles.app}>
                 <div className={styles.listings}>
-                    <Listing id="years-listing" title="Years" entries={years}></Listing>
-                    <Listing id="shows-listing" entries={shows}></Listing>
-                    <Listing id="setlist-listing" entries={setlist}></Listing>
+                    <Listing id="years-listing"
+                             title="Years"
+                             entries={years}
+                             onTitleClick={this.onTitleClicked.bind(this, "year")}>
+                    </Listing>
+                    <Listing id="shows-listing"
+                             title="Shows"
+                             entries={shows}
+                             onTitleClick={this.onTitleClicked.bind(this, "shows")}>
+                    </Listing>
+                    <Listing id="setlist-listing"
+                             title="Setlist"
+                             entries={setlist}
+                             onTitleClick={this.onTitleClicked.bind(this, "setlist")}>
+                    </Listing>
                 </div>
                 <Player startTrack={startTrack} displayInfo={displayInfo}></Player>
             </div>

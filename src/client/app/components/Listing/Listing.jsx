@@ -4,21 +4,28 @@ import ListingActions from '../../actions/ListingActions';
 import React from 'react';
 
 export default class Listing extends React.Component {
-    onClick(entry) {
-        ListingActions.listingSelected(this.props.id, entry.key);
+    onEntryClick() {
+        const listingNode = this.refs.listingNode.getDOMNode();
+        const index = listingNode.value;
+
+        if (index > -1) {
+            const entry = this.props.entries[index];
+            ListingActions.listingSelected(this.props.id, entry.key);
+        }
     }
     
     render() {
-        const entries = this.props.entries || [];        
+        const entries = this.props.entries || [];
+        
         return (
-            <div className={styles.listing}>
-                <span className={styles.title}>{this.props.title}</span>
+            <select ref="listingNode" className={styles.listing} onChange={this.onEntryClick.bind(this)}>
+                <option value={-1}>Make a selection</option>
                 {
-                    entries.map((entry) => {
-                        return (<button key={entry.key} onClick={this.onClick.bind(this, entry)}>{entry}</button>)
+                    entries.map((entry, i) => {
+                        return (<option key={entry.key} value={i}>{entry}</option>)
                     })
                  }
-            </div>
+            </select>
         );
     }
 }
