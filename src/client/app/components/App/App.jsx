@@ -99,9 +99,11 @@ export default class App extends Component {
         const showInfo = ShowStore.getShowInfo(year, showId);
 
         if (showInfo.venue && showInfo.location && trackSelected)
-            return (<a href={"https://archive.org/details/" + showInfo.id} target="_blank">
-                      {showInfo.venue + " in " + showInfo.location}
-                    </a>);
+            return (<div>
+                      <a style={{ "font-size" : "50%"}} href={"https://archive.org/details/" + showInfo.id} target="_blank">
+                        ({showInfo.venue + " in " + showInfo.location})
+                      </a>
+                    </div>);
         else
             return "";
     }
