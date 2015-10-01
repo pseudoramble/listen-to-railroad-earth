@@ -115,6 +115,11 @@ export default class App extends Component {
 
         return (
             <div className={styles.app}>
+                <div>
+                    <h1>Listen to Railroad Earth!</h1>
+                    Select a year from the 1st menu, a show to listen to from the 2nd, and pick a track to start with from the 3rd!
+                </div>
+
                 <div className={styles.listings}>
                     <Listing id="years-listing"
                              title="Years"
