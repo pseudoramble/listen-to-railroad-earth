@@ -30,9 +30,9 @@ export default class Player extends React.Component {
                     {trackTitle} ({this.props.displayInfo})
                 </div>
                 <div className={styles.controls}>
-                    <span className={styles.button} onClick={this.onTrackEnded.bind(this)}>Previous</span>
-                    <audio ref="audioTag" src={startTrack && startTrack.url ? startTrack.url : ""} controls="controls" autoPlay="autoplay"></audio>
-                    <span className={styles.button} onClick={this.onTrackEnded.bind(this)}>Next</span>
+                    <span className={styles.button} onClick={this.onTrackEnded.bind(this)}>&#x25C1;</span>
+                    <audio className={styles.audio} ref="audioTag" src={startTrack && startTrack.url ? startTrack.url : ""} controls="controls" autoPlay="autoplay"></audio>
+                    <span className={styles.button} onClick={this.onTrackEnded.bind(this)}>&#x25B7;</span>
                 </div>
             </div>
         );
