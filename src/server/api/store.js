@@ -55,7 +55,9 @@ const SHOW_TO_SETLIST = {};
 
 module.exports = {
     getShows : function(year) {
-        return YEAR_TO_SHOWS[year] || [];
+        return YEAR_TO_SHOWS[year].sort(function(a, b) {
+            return a.date < b.date ? -1 : 1;
+        }) || [];
     },
 
     getSetlist : function(showId) {
