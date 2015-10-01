@@ -1,6 +1,11 @@
 import styles from './_Player.scss';
 import PlayerActions from '../../actions/PlayerActions';
 
+import {
+    TRACK_FINISHED_NEXT,
+    TRACK_FINISHED_PREV
+} from '../../constants/AppConstants'
+
 import React from 'react';
 
 export default class Player extends React.Component {
@@ -10,12 +15,12 @@ export default class Player extends React.Component {
     
     componentDidMount() {
         const audioNode = React.findDOMNode(this.refs.audioTag);
-        audioNode.addEventListener("ended", this.onTrackEnded.bind(this));
+        audioNode.addEventListener("ended", this.onTrackEnded.bind(this, TRACK_FINISHED_NEXT));
     }
 
-    onTrackEnded() {
+    onTrackEnded(direction) {
         if (this.props.startTrack) {
-            PlayerActions.trackFinished(this.props.startTrack);
+            PlayerActions.trackFinished(this.props.startTrack, direction);
         }
     }
     
@@ -30,9 +35,9 @@ export default class Player extends React.Component {
                     {trackTitle} ({this.props.displayInfo})
                 </div>
                 <div className={styles.controls}>
-                    <span className={styles.button} onClick={this.onTrackEnded.bind(this)}>&#x25C1;</span>
+                    <span className={styles.button} onClick={this.onTrackEnded.bind(this, TRACK_FINISHED_PREV)}>&#x25C1;</span>
                     <audio className={styles.audio} ref="audioTag" src={startTrack && startTrack.url ? startTrack.url : ""} controls="controls" autoPlay="autoplay"></audio>
-                    <span className={styles.button} onClick={this.onTrackEnded.bind(this)}>&#x25B7;</span>
+                    <span className={styles.button} onClick={this.onTrackEnded.bind(this, TRACK_FINISHED_NEXT)}>&#x25B7;</span>
                 </div>
             </div>
         );

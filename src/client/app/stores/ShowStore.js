@@ -8,6 +8,7 @@ import {
     SETLIST_ADDED,
     TRACK_CHANGE,
     TRACK_FINISHED,
+    TRACK_FINISHED_NEXT,
     PLAYLIST_CONFIGURED
 } from '../constants/AppConstants';
 
@@ -114,7 +115,7 @@ AppDispatcher.register((action) => {
             store.configureSetlist(activeSetlist, store.findTrackIndex(activeSetlist, action.track));
             break;
         case TRACK_FINISHED:
-            store.configureSetlist(activeSetlist, store.findTrackIndex(activeSetlist, action.track) + 1);
+            store.configureSetlist(activeSetlist, store.findTrackIndex(activeSetlist, action.track) + action.direction);
             break;
     }
 });
