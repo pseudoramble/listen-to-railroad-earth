@@ -100,7 +100,7 @@ export default class App extends Component {
 
         if (showInfo.venue && showInfo.location && trackSelected)
             return (<div>
-                      <a style={{ "font-size" : "50%"}} href={"https://archive.org/details/" + showInfo.id} target="_blank">
+                      <a style={{ "font-size" : "50%" }} href={"https://archive.org/details/" + showInfo.id} target="_blank">
                         ({showInfo.venue + " in " + showInfo.location})
                       </a>
                     </div>);

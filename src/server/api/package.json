@@ -1,7 +1,7 @@
 {
   "name": "listen-to-rre-api",
   "version": "1.0.0",
-  "description": "An API for grabbing Railroad Earth tracks from Archive.org/Etree.org",
+  "description": "An API for grabbing Railroad Earth tracks from archive.org/etree.org",
   "main": "main.js",
   "dependencies": {
     "express": "^4.13.3"
