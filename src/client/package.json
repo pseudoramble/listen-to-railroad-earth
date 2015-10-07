@@ -13,6 +13,7 @@
   "scripts": {
     "build": "webpack --colors --progress --config ./webpack/config && cp -R ./build/* ./public/",
     "clean": "rimraf $npm_package_config_buildDir && mkdir $npm_package_config_buildDir",
+    "deploy" : "npm run build && ./deploy.sh",
     "env": "env",
     "lint": "eslint --ext .js --ext .jsx ./app ./webpack && echo No linting errors.",
     "prebuild": "npm run clean",

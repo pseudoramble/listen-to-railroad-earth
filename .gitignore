@@ -7,3 +7,6 @@
 **/songs
 **/show-data
 **/node_modules
+
+prod-cfg.json
+deploy.sh

@@ -1,9 +1,11 @@
 var express = require('express'),
+    fs = require('fs'),
     store = require('./store.js');
 
-var app = express();
+var app = express(),
+    settings = JSON.parse(fs.readFileSync('./settings.json'));
 
-app.use(express.static('../../client/public'));
+app.use(express.static(settings.pubDir));
 
 app.all('*', function(req, res, next) {
        res.header("Access-Control-Allow-Origin", "*");
